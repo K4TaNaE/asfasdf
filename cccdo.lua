@@ -1380,7 +1380,7 @@ local function init_autofarm()
   end
   local flag = false
   local kitty_exist = check_pet_owned("2d_kitty")
-  local kitty_unique = inv_get_category_unique("pets", "d2kitty")
+  local kitty_unique = inv_get_category_unique("pets", "2d_kitty")
   if kitty_exist and kitty_unique ~= actual_pet.unique then
   	safeInvoke("ToolAPI/Equip",
   	  kitty_unique,
@@ -1587,7 +1587,7 @@ local function init_autofarm()
   	  pcall(pet_ailments[k])
   	  if CONNECTIONS.WalkLock then CONNECTIONS.WalkLock:Disconnect(); CONNECTIONS.WalkLock = nil end
   	  if CONNECTIONS.RideLock then CONNECTIONS.RideLock:Disconnect(); CONNECTIONS.RideLock = nil end
-  	  Cooldown.init_autofarm = 1
+  	  Cooldown.init_autofarm = 0
   	  return
   	end
   end
@@ -1611,7 +1611,7 @@ local function init_baby_autofarm()
   	  house_check()
   	  print(formatted_baby[k])
   	  pcall(baby_ailments[k])
-  	  Cooldown.init_baby_autofarm = 1
+  	  Cooldown.init_baby_autofarm = 0
   	  return
   	end
   end
@@ -1762,6 +1762,7 @@ local function __init()
 	cd.webhook_send_delay = cd.webhook_send_delay and math.max(0, cd.webhook_send_delay - 1)
 	cd.watchdog = cd.watchdog and math.max(0, cd.watchdog - 1)
 	cd.init_autofarm = cd.init_autofarm and math.max(0, cd.init_autofarm - 1)
+	cd.init_baby_autofarm = cd.init_baby_autofarm and math.max(0, cd.init_baby_autofarm - 1)
 	cd.init_lurebox_farm = cd.init_lurebox_farm and math.max(0, cd.init_lurebox_farm - 1)
 	if _G.InternalConfig.DiscordWebhookURL and cd.webhook_send_delay == 0 then
 	  cd.webhook_send_delay = nil
@@ -1970,10 +1971,10 @@ end))
 end)()
 ;(function()
   if LocalPlayer.Character then return end
-  safeFire("SettingsAPI/SetBooleanFlag", "tutorial_completed", true)
-  safeFire("SettingsAPI/SetBooleanFlag", "pet_radial_menu", true)
-  safeFire("SettingsAPI/SetBooleanFlag", "use_ailments_monitor", true)
-  safeFire("SettingsAPI/SetBooleanFlag", "pet_can_auto_exit_furniture", false)
+  safeFire("SettingsAPI/SetSetting", "tutorial_completed", true)
+  safeFire("SettingsAPI/SetSetting", "pet_radial_menu", true)
+  safeFire("SettingsAPI/SetSetting", "use_ailments_monitor", true)
+  safeFire("SettingsAPI/SetSetting", "pet_can_auto_exit_furniture", true)
   safeFire("SettingsAPI/SetSetting", "family_requests", 3)
   safeFire("SettingsAPI/SetSetting", "party_requests", 3)
   safeFire("SettingsAPI/SetSetting", "trade_requests", 3)
