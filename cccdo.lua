@@ -106,6 +106,7 @@ formatted_pet = {
   ["sleepy"] = "🛏️ Task [sleepy] detected for:",
   ["mystery"] = "❓ Task [mystery] detected for:",
   ["pizza_party"] = "🍕 Task [pizza-party] detected for:",
+  ["pet_me"] = "🫳 Task [pet-me] detected for:"
 }
 formatted_baby = {
   ["camping"] = "🏕️ Task [camping] detected for baby!",
@@ -1077,6 +1078,7 @@ local pet_ailments = {
 	safeFire("PetAPI/ReplicateActivePerformances", actual_pet.model, { ["FocusPet"] = true })
 	task.wait(.15)
 	safeFire("AilmentsAPI/ProgressPetMeAilment", actual_pet.unique)
+	print(string.format("🟩 Task pet-me for %s - done!", actual_pet.remote)) 
 	enstat(age, friendship, money, "pet_me")  
   end,
 	-- ["party_zone"] = function() end, -- available on admin abuse
@@ -1417,6 +1419,7 @@ local function init_autofarm()
 	_G.potionfarm = false
   end 
   if not actual_pet.unique or (_G.flag_if_no_one_to_farm and not _G.potionfarm) then
+	print("in cycle")
 	local owned_pets = get_owned_pets()
   	if _G.InternalConfig.FarmPriority == "pets" then	
   	  local found = false
@@ -1431,6 +1434,7 @@ local function init_autofarm()
   	          }
   	        )
   	        flag = true
+			print("found 1")
   	        found = true
   	        _G.flag_if_no_one_to_farm = false
 			_G.random_farm = false
@@ -1457,7 +1461,9 @@ local function init_autofarm()
   	  end
   	end
   	if not flag then
+		print("opposite 0")
   	  if _G.InternalConfig.AutoFarmFilter.OppositeFarmEnabled then
+		print("opposite 1")
   	    if not _G.flag_if_no_one_to_farm then  
   	      print("⚙️ Enabling opposite farm..")
   	      if _G.InternalConfig.FarmPriority == "pets" then
@@ -1585,7 +1591,7 @@ local function init_autofarm()
   	  pcall(pet_ailments[k])
   	  if CONNECTIONS.WalkLock then CONNECTIONS.WalkLock:Disconnect(); CONNECTIONS.WalkLock = nil end
   	  if CONNECTIONS.RideLock then CONNECTIONS.RideLock:Disconnect(); CONNECTIONS.RideLock = nil end
-  	  Cooldown.init_autofarm = 0
+  	  Cooldown.init_autofarm = 1
   	  return
   	end
   end
@@ -1609,7 +1615,7 @@ local function init_baby_autofarm()
   	  house_check()
   	  print(formatted_baby[k])
   	  pcall(baby_ailments[k])
-  	  Cooldown.init_baby_autofarm = 0
+  	  Cooldown.init_baby_autofarm = 1
   	  return
   	end
   end
@@ -1760,7 +1766,6 @@ local function __init()
 	cd.webhook_send_delay = cd.webhook_send_delay and math.max(0, cd.webhook_send_delay - 1)
 	cd.watchdog = cd.watchdog and math.max(0, cd.watchdog - 1)
 	cd.init_autofarm = cd.init_autofarm and math.max(0, cd.init_autofarm - 1)
-	cd.init_baby_autofarm = cd.init_baby_autofarm and math.max(0, cd.init_baby_autofarm - 1)
 	cd.init_lurebox_farm = cd.init_lurebox_farm and math.max(0, cd.init_lurebox_farm - 1)
 	if _G.InternalConfig.DiscordWebhookURL and cd.webhook_send_delay == 0 then
 	  cd.webhook_send_delay = nil
@@ -1783,7 +1788,6 @@ local function __init()
 	end
   end
 end 
-local function autotutorial() end
 local function license() 
   if loader("TradeLicenseHelper").player_has_trade_license(LocalPlayer) then
   	print("[+] License found.")
