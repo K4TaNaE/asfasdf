@@ -1374,7 +1374,7 @@ local function house_check()
 end
 local function init_autofarm() 
   print("⚙️ Running pet check.")
-  if count(ClientData.get("inventory").pets) < 2 then
+  if count(ClientData.get("inventory").pets) < 1 then
   	Cooldown.init_autofarm = 50 
   	return
   end
@@ -1419,7 +1419,6 @@ local function init_autofarm()
 	_G.potionfarm = false
   end 
   if not actual_pet.unique or (_G.flag_if_no_one_to_farm and not _G.potionfarm) then
-	print("in cycle")
 	local owned_pets = get_owned_pets()
   	if _G.InternalConfig.FarmPriority == "pets" then	
   	  local found = false
@@ -1434,7 +1433,6 @@ local function init_autofarm()
   	          }
   	        )
   	        flag = true
-			print("found 1")
   	        found = true
   	        _G.flag_if_no_one_to_farm = false
 			_G.random_farm = false
@@ -1461,9 +1459,7 @@ local function init_autofarm()
   	  end
   	end
   	if not flag then
-		print("opposite 0")
   	  if _G.InternalConfig.AutoFarmFilter.OppositeFarmEnabled then
-		print("opposite 1")
   	    if not _G.flag_if_no_one_to_farm then  
   	      print("⚙️ Enabling opposite farm..")
   	      if _G.InternalConfig.FarmPriority == "pets" then
