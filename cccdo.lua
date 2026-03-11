@@ -1731,7 +1731,7 @@ local function init_send_webhook()
   	🥚 __Eggs Hatched__ - [ %d ]", 
 	farmed.money, farmed.pets_fullgrown, farmed.ailments, farmed.potions, farmed.friendship_levels, farmed.baby_ailments, farmed.eggs_hatched)
   )
-  Cooldown.webhook_send_delay = _G.InternalConfig.WebhookSendDelay
+  Cooldown.webhook_send_delay = 3600
 end
 local function __init_babypet_autofarm() 
     while task.wait(1) do
@@ -1756,7 +1756,6 @@ local function __init_babypet_autofarm()
   end
 end
 local function __init()
-  Cooldown.webhook_send_delay = _G.InternalConfig.WebhookSendDelay or 3600
   while task.wait(1) do
 	local cd = Cooldown
 	cd.webhook_send_delay = cd.webhook_send_delay and math.max(0, cd.webhook_send_delay - 1)
