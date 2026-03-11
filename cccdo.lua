@@ -168,6 +168,7 @@ CONNECTIONS = {}
 _G.Looping = {}
 CLEANUP_INSTANCES = {}
 _G.HeadCashed = nil
+_G.mystery = false
 local function init_part(name, xyz) 
   if game.Workspace:FindFirstChild(name) then return end
   local main = Instance.new("Part")
@@ -1035,17 +1036,19 @@ local pet_ailments = {
 	enstat(age, friendship, money, "sleepy")  	
   end,
   ["mystery"] = function() 
-	for k,_ in AilmentsDB do
+    _G.mystery = true
+	while task.wait(5) and has_ailment("mystery") do 
+	  for k,_ in AilmentsDB do
 	  safeFire("AilmentsAPI/ChooseMysteryAilment", unpack({
-		[1] = ClientData.get("pet_char_wrappers")[1].pet_unique,
-		[2] = "mystery",
-		[3] = 1,
-		[4] = k
+	  	[1] = actual_pet.unique,
+	  	[2] = "mystery",
+	  	[3] = 1,
+	  	[4] = k
 	  }))
+	  end
 	end
-	if not has_ailment("pet_me") then
-	  print(string.format("🟩 Task mystery for %s - done!", actual_pet.remote)) 
-	end
+	_G.mystery = false
+	print(string.format("🟩 Task mystery for %s - done!", actual_pet.remote)) 
   end,
   ["pizza_party"] = function() 
 	local pet = ClientData.get("pet_char_wrappers")[1]
@@ -1573,6 +1576,13 @@ local function init_autofarm()
   for k,_ in pairs(eqailments) do 
   	if pet_ailments[k] then
   	  house_check()
+	  if k == "mystery" then 
+  	  	if not _G.mystery then
+  	  	  print(formatted_pet["mystery"], actual_pet.remote)
+  	  	  task.spawn(pet_ailments[k]) 
+  	  	end
+  	  	continue
+  	  end
   	  print(formatted_pet[k], actual_pet.remote)
   	  pcall(pet_ailments[k])
   	  if CONNECTIONS.WalkLock then CONNECTIONS.WalkLock:Disconnect(); CONNECTIONS.WalkLock = nil end
