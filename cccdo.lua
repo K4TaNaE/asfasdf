@@ -162,7 +162,6 @@ local parts = {
   ["_beach"] = {-670, 37, -1413},
 }
 local furn = {}
-_G.mystery = false
 _G.potionfarm = false
 _G.InternalConfig = {}
 CONNECTIONS = {}
@@ -1036,19 +1035,17 @@ local pet_ailments = {
 	enstat(age, friendship, money, "sleepy")  	
   end,
   ["mystery"] = function() 
-	_G.mystery = true
-	while task.wait(2) and has_ailment("mystery") do
-	  for k,_ in AilmentsDB do
-	    safeFire("AilmentsAPI/ChooseMysteryAilment",
-		  actual_pet.unique,
-		  "mystery",
-		  1,
-		  k
-		)
-	  end
+	for k,_ in AilmentsDB do
+	  safeFire("AilmentsAPI/ChooseMysteryAilment", unpack({
+		[1] = ClientData.get("pet_char_wrappers")[1].pet_unique,
+		[2] = "mystery",
+		[3] = 1,
+		[4] = k
+	  }))
 	end
-	_G.mystery = false
-	print(string.format("🟩 Task mystery for %s - done!", actual_pet.remote)) 
+	if not has_ailment("pet_me") then
+	  print(string.format("🟩 Task mystery for %s - done!", actual_pet.remote)) 
+	end
   end,
   ["pizza_party"] = function() 
 	local pet = ClientData.get("pet_char_wrappers")[1]
@@ -1576,13 +1573,6 @@ local function init_autofarm()
   for k,_ in pairs(eqailments) do 
   	if pet_ailments[k] then
   	  house_check()
-  	  if k == "mystery" then 
-  	  	if not _G.mystery then
-  	  	  print(formatted_pet["mystery"], actual_pet.remote)
-  	  	  task.spawn(pet_ailments[k]) 
-  	  	end
-  	  	continue
-  	  end
   	  print(formatted_pet[k], actual_pet.remote)
   	  pcall(pet_ailments[k])
   	  if CONNECTIONS.WalkLock then CONNECTIONS.WalkLock:Disconnect(); CONNECTIONS.WalkLock = nil end
@@ -2067,7 +2057,6 @@ if _G.InternalConfig.FarmPriority or _G.InternalConfig.BabyAutoFarm then
   task.spawn(__init_babypet_autofarm)	
 end
 __init()
-task.wait(5)
 if _G.InternalConfig.Disable3DRendering then
 	RunService:Set3dRenderingEnabled(false)
 end 
