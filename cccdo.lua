@@ -205,6 +205,7 @@ for _,v in ipairs(marshmallow) do
             }
         }
     }))
+    task.wait(.16)
 end
 task.wait(.5)
 ReplicatedStorage.adoptme_new_net["adoptme_legacy_shared.ContentPacks.Sugarfest2026.ChocolateRiver.ChocolateRiverNet:14"]:FireServer()
