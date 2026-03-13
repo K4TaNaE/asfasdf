@@ -19,7 +19,12 @@ local StateManagerClient = loader("StateManagerClient")
 local LiveOpsTime = loader("LiveOpsTime")
 local Calculator = require(ReplicatedStorage.new.modules.PetRecycler.PetRecyclerCalculator)
 local AilmentsDB = require(ReplicatedStorage.new.modules.Ailments.AilmentsDB)
-
+;(function() 
+  for k, v in pairs(debug.getupvalue(require(ReplicatedStorage.ClientModules.Core:WaitForChild("RouterClient"):WaitForChild("RouterClient")).init, 7)) do
+  	v.Name = k
+  end
+  print("[+] API dehashed.")
+end)()
 local marshmallow = {
 "{46dca2e4-1ac9-4859-942b-f1c80b6d070b}",
 "{45f636ca-5b3b-43b7-ba2b-fe68568b6c41}",
