@@ -2002,11 +2002,6 @@ function Event.get_daily_dice()
 end
 local function __init_babypet_autofarm() 
   while task.wait(1) do
-	if Cooldown.Event.try_use_inventory_dices and Cooldown.Event.try_use_inventory_dices <= 0 then
-	  Cooldown.Event.try_use_inventory_dices = nil
-	  pcall(Event.try_use_dices)
-	  Cooldown.Event.try_use_inventory_dices = 300 -- специально убрал if not res потоучто и так и так кулдаун 300 секунд.
-	end
     if _G.InternalConfig.FarmPriority then
       if Cooldown.init_autofarm and Cooldown.init_autofarm <= 0 then
 		Cooldown.init_autofarm = nil
@@ -2049,6 +2044,13 @@ local function __init()
 	  cd.init_lurebox_farm = nil
 	  task.spawn(function()
 		pcall(init_lurebox_farm)
+	  end)
+	end
+	if Cooldown.Event.try_use_inventory_dices and Cooldown.Event.try_use_inventory_dices == 0 then
+	  Cooldown.Event.try_use_inventory_dices = nil
+	  task.spawn(function() 
+		pcall(Event.try_use_dices)
+		Cooldown.Event.try_use_inventory_dices = 300 -- специально убрал if not res потоучто и так и так кулдаун 300 секунд.
 	  end)
 	end
 	if cd.Event.daily_dice_cooldown == 0 then
