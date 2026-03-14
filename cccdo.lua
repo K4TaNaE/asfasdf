@@ -2031,9 +2031,9 @@ local function __init()
 	cd.init_baby_autofarm = cd.init_baby_autofarm and math.max(0, cd.init_baby_autofarm - 1)
 	cd.init_lurebox_farm = cd.init_lurebox_farm and math.max(0, cd.init_lurebox_farm - 1)
 	cd.Event.marshmallow_autocollect = cd.Event.marshmallow_autocollect and math.max(0, cd.Event.marshmallow_autocollect - 1)
-	cd.Event.daily_dice_cooldown = cd.Event.daily_dice_cooldown and math.max(0, cd.Event.daily_dice_cooldown)
-	cd.Event.daily_rewards_cooldown = cd.Event.daily_rewards_cooldown and math.max(0, cd.Event.daily_rewards_cooldown)
-	cd.Event.try_use_inventory_dices = cd.Event.try_use_inventory_dices and math.max(0, cd.Event.try_use_inventory_dices)
+	cd.Event.daily_dice_cooldown = cd.Event.daily_dice_cooldown and math.max(0, cd.Event.daily_dice_cooldown - 1)
+	cd.Event.daily_rewards_cooldown = cd.Event.daily_rewards_cooldown and math.max(0, cd.Event.daily_rewards_cooldown - 1)
+	cd.Event.try_use_inventory_dices = cd.Event.try_use_inventory_dices and math.max(0, cd.Event.try_use_inventory_dices - 1)
 	if _G.InternalConfig.DiscordWebhookURL and cd.webhook_send_delay == 0 then
 	  cd.webhook_send_delay = nil
 	  task.spawn(function()
