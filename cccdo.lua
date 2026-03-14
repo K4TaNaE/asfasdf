@@ -87,7 +87,13 @@ local Cooldown = {
   init_baby_autofarm = 0,
   init_lurebox_farm = 0,
   watchdog = 0,
-  webhook_send_delay = 3600
+  webhook_send_delay = 3600,
+  Event = {
+    marshmallow_autocollect = 0,
+	daily_dice_cooldown = 0,
+	daily_rewards_cooldown = 0,
+	try_use_inventory_dices = 0
+  }
 }
 formatted_pet = {
   ["camping"] = "🏕️ Task [camping] detected for:",
@@ -128,40 +134,211 @@ local Rarities = {
   [4] = "ultra_rare",
   [5] = "legendary",
 }
+local marshmallow = {
+"{46dca2e4-1ac9-4859-942b-f1c80b6d070b}",
+"{45f636ca-5b3b-43b7-ba2b-fe68568b6c41}",
+"{bfbfac00-a715-44a6-a32d-b02fb4fc71d7}",
+"{e838c521-7f7a-4307-b2a1-333a47485eaf}",
+"{dda99337-dec1-4e4c-b10c-4cab4e29f014}",
+"{65dff08c-c13a-4483-bc8e-b8246d2944f5}",
+"{b12eacc6-a77c-408d-bf3d-3fa6ec22b864}",
+"{b8af299f-f9e3-4c9b-8d9b-c90ab67e05ef}",
+"{d53bcd3e-e8c5-46d5-814d-c531af19b313}",
+"{ffbaad1b-d694-484a-8d21-338564b913f8}",
+"{503633c5-07a4-4452-9923-7d959fcc84bb}",
+"{392f996d-3dde-47fe-84a5-0a8989d38a24}",
+"{6793647b-8deb-47c6-8341-985cae96da9c}",
+"{fb1162cc-45ff-4e33-bf12-59399c4053a4}",
+"{cb24b90b-41ef-4062-8290-5c3daa9f0ebb}",
+"{ed56c5a7-6e5f-4923-9e33-386863295295}",
+"{722590bd-f2e4-40f9-9764-064e188da384}",
+"{13f51cec-d29b-4aff-90d0-f272f971c345}",
+"{84cc461f-f18c-486a-b52b-c02fd5d14951}",
+"{39d7a4a8-76bf-4f68-9705-d92b6ab4fd70}",
+"{1a0f3a77-adb7-45b4-9168-e27643493e42}",
+"{0104d31d-2ccc-41e4-b415-4ed1dde10312}",
+"{94a2c2bd-d22f-4819-a058-faa3021bdaad}",
+"{3203fbe6-7723-4378-9bf6-5c8a24ab1be2}",
+"{14619336-a4d1-4bee-960c-69aa204626db}",
+"{6ea7b899-4b3b-4a1a-899e-27afddae023a}",
+"{026ade17-6e94-4c22-83d7-425d99ab7e66}",
+"{6de1b526-6b01-4ff9-811b-687b4c0b9b3e}",
+"{64085bd1-e20e-4998-86e8-f67a478939e9}",
+"{6f897409-0177-458c-b377-4569e997a13a}",
+"{8e34db76-d4b2-4a40-9167-31d0d5470ee4}",
+"{87d1777e-38f8-43d0-a564-c5c7f6e22203}",
+"{42307410-1e97-4ba2-9096-20dd1c51a63d}",
+"{a00bb1d2-97c0-462b-a66c-c1049eb973a3}",
+"{16f59f0c-ed14-45cf-a6f9-51f9c051f7e0}",
+"{a734bf4b-be08-4038-a0c3-7eb3c6111fdb}",
+"{f34ed415-d405-4579-ab1f-8fbe53aa22f2}",
+"{9d205f01-ae45-4559-baac-4cb6c0c8993d}",
+"{bf5eb2a3-d2c8-4f6e-a7cb-7e724b12c5ae}",
+"{bd281fb7-d03f-4f28-9fd3-2d4eea36e743}",
+"{06407d28-82ad-442b-96bb-818f907493ff}",
+"{65e6b558-5220-435c-a805-513095676aa9}",
+"{0bc92778-87f1-4409-a54a-cf9178964b1f}",
+"{b9daf426-92c1-49b4-abca-c58ca5d9e0a9}",
+"{78710ec1-0493-4748-a610-83fee2716624}",
+"{a3c7f548-e41a-46b1-8d87-c5de3a566148}",
+"{e02061cb-cf98-4fe4-9802-145c98c0867b}",
+"{2babb231-7601-41bf-bbb4-f0edf5a1747d}",
+"{83e6fdda-ad9a-4528-9520-479b5852a361}",
+"{5d94b1f9-e1f8-447e-aacc-7433703547e9}",
+"{88b29049-39c6-455e-be1f-75530cf110aa}",
+"{d5bc0c47-1580-4fdd-9cf3-102f7843c39e}",
+"{ee4b4ef5-09b8-4bdd-805c-c1fd20f9bae0}",
+"{cb1c2f4a-34d0-4685-a6cf-01a4d20bfd2d}",
+"{1dc10d7d-c04a-48f6-a823-54bca1f2be3d}",
+"{cb955dfc-093d-4001-b5b0-ef6b175072a1}",
+"{bee31fae-6a2e-4c95-a673-36b275c75949}",
+"{25a67c29-8c07-4065-9a77-73c34f2f0a0e}",
+"{8dd0d543-1617-4bdf-a26a-53cd87610262}",
+"{30fb32a8-4d35-4093-875f-a62aa5e51417}",
+"{00449e7d-6dd4-4d3b-a884-924e79e7d545}",
+"{168b3ef7-1333-4dac-a725-c1e9b3f1b2f0}",
+"{f7a4b382-bf78-4be3-928b-dff5b4c2e72f}",
+"{c75165b8-a8b8-4759-831e-1ea6022688c7}",
+"{8d7ca87b-3661-4cc9-b205-089c357b17dc}",
+"{1282b867-96a8-4267-8582-2e91712478af}",
+"{4584035e-483d-4297-88ac-8c2e8661ec5d}",
+"{9a5b0a26-3b95-49b7-828d-3813b71c4e3e}",
+"{68f85bed-4a19-4d73-a7f8-951335ba9355}",
+"{e7f5681d-0b3a-42ff-9cf1-eaec59b64672}",
+"{bd307b69-7ce4-48df-a067-c80979c4dc94}",
+"{0fcc587a-22ed-4ae2-888d-97fefe2fb869}",
+"{a4a8791f-e993-44e2-87e4-0031fc210d18}",
+"{8215710d-9345-43c3-892e-bac765ea2d4b}",
+"{226038b9-cd4e-4746-a8f0-6087f75d08b5}",
+"{68d47ab1-dc88-4cf2-ac32-d172b5a084fa}",
+"{29633ad0-9a26-49bf-84c1-4326bd105bff}",
+"{2b42e6ef-7ce6-4e79-baa9-c6ddafd0aae7}",
+"{0fb7de61-82ba-47a5-bfbb-882751320ef0}",
+"{836ebd89-fb1e-4209-bbd9-8a72a33b7cdc}",
+"{e0bb09bf-53b8-4e10-9dbd-e1958731cc7a}",
+"{ce58a7ce-11de-4dc8-a707-3547974c122c}",
+"{31ddd2ed-0d40-4282-9d1e-91171f623ef2}",
+"{471f1636-cb7d-41d4-96ca-2e14c1a2f183}",
+"{34d7d7ee-54e2-4d06-bb00-69fd5e39beb1}",
+"{e9466b21-fe37-40f0-ba35-66a9567396a8}",
+"{5f692b00-a30a-4fce-8e5a-f6d3dd7e2916}",
+"{cddabde9-0758-40b9-bb11-6962a4722a57}",
+"{50feac33-9eee-4588-afc3-97df922e3f00}",
+"{e650261b-64fc-4c08-a75a-3b2a4082d014}",
+"{6285ff12-7e0d-4ea3-bfac-b708f7365d54}",
+"{0a62702e-2eb4-4628-b128-25bd9bc24f0e}",
+"{3ef891aa-e19e-4d17-842c-93af4177ca35}",
+"{b8da90f7-bc29-4d4d-8d78-900a2e2c3e37}",
+"{4a056f1a-37d8-4d4f-94b7-b82b62336853}",
+"{92d40e4b-7b11-40e5-b2ae-4b3026e02817}",
+"{b350cb36-9362-4f0f-a211-64401bcfbf07}",
+"{c5ad92df-018c-4c5a-ad06-deab43d0061c}",
+"{01d591d9-b992-42be-9414-baf55b410727}",
+"{3d111c0e-23ea-441e-b2b1-3000b2d1abe8}",
+"{680e7b63-a67f-4cc0-be71-887b85ebfef6}",
+"{97b8ced9-a518-46b4-89ac-db4c7bf1ada2}",
+"{68a61a0d-ade1-48c9-9f94-0aa4ed75342b}",
+"{9b8a54ab-0ceb-4da5-a631-47453d887121}",
+"{a2a0075b-47a9-4e0c-9a36-10e6608175d9}",
+"{74df0f87-4ccc-485c-8cba-d265b28cbac4}",
+"{0d988090-c906-4cb5-95d9-f0de8bba141e}",
+"{1e0a75f5-a635-463d-8cec-2345e852b85c}",
+"{6505337b-0020-466c-89a0-051118c7902b}",
+"{943a378c-45ca-4beb-82c4-4bd9f19dfcad}",
+"{95e065db-b9f1-4a29-9cc9-d8c6db795ef2}",
+"{0411269e-69f3-4e27-8a05-b0299da87394}",
+"{3753c264-3548-4afa-b355-5722f90f6a69}",
+"{b5fe9857-95cf-4a77-aba2-c633d77698cf}",
+"{642e8389-1353-417a-ab9c-940876373917}",
+"{5f4c7e43-2c1a-4c12-8cf2-b34bceb7af70}",
+"{054f97cb-753c-4d8c-9281-930418b5f5ec}",
+"{896d9f21-776f-4dee-b22c-11ecab9b6c9b}",
+"{dd025eb2-10b6-46d3-8468-994282cd29ab}",
+"{2085eb60-8b89-456d-a7ab-70e54ccbf346}",
+"{414ac687-fb44-45ca-ac90-526f5ae22057}",
+"{b9ce37d2-fd61-4fe2-b513-e0314fe79514}",
+"{db50e49e-6354-4597-af0a-9b9b7e0cfbe8}",
+"{d7c51b61-218b-4c1d-8e24-16b16dd38dba}",
+"{dd4e80a1-a8bc-43a6-a18d-07e0e9cdebb8}",
+"{c8093c22-2a65-46a5-bd5b-ce7e207a6e86}",
+"{4a221530-7fcf-480a-bc29-c210511b7ff2}",
+"{886df299-df87-4c08-b244-78af0c59c27e}",
+"{18e0c4cc-3d06-4331-b73b-cae5ef2e6715}",
+"{0c87b405-232b-48d7-b7b7-0c0636899a33}",
+"{203064f6-2485-483b-bfb7-ef35465465fe}",
+"{6b627e9b-ee52-456b-833e-4c59d522510e}",
+"{2c5411a9-693e-415d-b7e9-03cf06bf99b1}",
+"{3f22d40a-4ee0-44da-8adf-1ea0fbbb340d}",
+"{436438e8-983d-47bd-92cf-035bbcbb1de5}",
+"{b38f85d7-e7da-4ed1-979a-cc39ac61c5f5}",
+"{4796c501-7172-465d-acfe-07140c2cb8f6}",
+"{a84c8c62-f11c-4c1d-a297-1bed6d880054}",
+"{087cca29-ac27-403a-a9db-06fd353f0145}",
+"{008581c8-0479-4fbe-9034-c2a42c7e5d25}",
+"{c874f7e6-c67c-4e40-a645-bbba707c34e1}",
+"{dab729ce-1a78-44d8-b8e6-873ec5c49f4e}",
+"{d00b5a85-9d9c-413d-8da4-7134d96c9919}",
+"{a629e0da-32cb-46dd-8e33-e8c4238c539e}",
+"{9525ebe4-fc85-4024-9ae4-5994fd6e7788}",
+"{eb2318a3-3e2f-42de-b3ab-7474ee12d9d9}",
+"{85dba3ea-fa05-4652-916c-02c2d5cf31de}",
+"{21840898-ee73-4bdf-8a94-5338f290d9e0}",
+"{08e4d9b6-cd7e-4005-91b1-cfde5cd50a14}",
+"{2bf4ce11-5905-4c97-ab4f-298025e5b4e0}",
+"{721f5ad8-453b-4a32-a8f8-8a2bf5704db2}",
+"{30d06033-95f8-43a1-a311-dcde2dfd6a34}",
+"{2b5ccdab-832d-40ba-ad3b-460452445b67}",
+"{2cadac03-4f42-43f6-b4b3-c3764848ef08}",
+"{f9463560-7550-40d5-9cee-b47f1e1d5ff6}",
+"{8ab0c870-bc05-4b8a-9e85-2c60dc0b156d}",
+"{00ffe177-bae9-4b56-a6cf-57a0bfa59f04}",
+"{993b0fb9-f6f2-4542-867a-e7ae76b0bc00}",
+"{c171242e-1662-43ef-a7a6-ef6ed4c16929}",
+"{ae5b4d83-c5f6-48bd-9072-d6607145caf4}",
+"{6dc84eed-c94b-4cca-af77-a83e15f8a3f2}",
+"{8900eea5-fccc-4d0c-8b55-3cb4e2991261}",
+"{6662d503-755c-40cc-89fd-6fa237616470}",
+"{2b9bb081-9fd8-481c-b49a-2f93110083d6}",
+"{ceb96285-96c9-4b0a-99d4-8d07bc9e6a1f}",
+"{b1c79cc8-86e4-43c8-a67b-221a4a8f3546}",
+"{454c9f46-b453-4d56-8621-9bfdac448523}",
+}
 Recycler_values = {
-  base_values = {
-	legendary = 900,
-	ultra_rare = 300,
-	common = 100,
-	uncommon = 125,
-	rare = 150,
-  },
-  age_multipliers = {
-	[1] = 0.9,
-	[2] = 1,
-	[3] = 1.5,
-	[4] = 2,
-	[5] = 3,
-	[6] = 5,
-  },
-  property_bonuses = {
-	rideable = 150,
-	flyable = 300
-  },
-  extremely_rare_chase_pet = "pet_recycler_2025_giant_panda",
-  eggs_to_exclude = {
-	retired_egg = true
-  },
-  non_tradeable_multiplier = 0.5,
-  max_pets_to_show = 10,
+    base_values = {
+        legendary = 900,
+        ultra_rare = 300,
+        common = 100,
+        uncommon = 125,
+        rare = 150,
+    },
+    age_multipliers = {
+        [1] = 0.9,
+        [2] = 1,
+        [3] = 1.5,
+        [4] = 2,
+        [5] = 3,
+        [6] = 5,
+    },
+    property_bonuses = {
+        rideable = 150,
+        flyable = 300
+    },
+    extremely_rare_chase_pet = "pet_recycler_2025_giant_panda",
+    eggs_to_exclude = {
+        retired_egg = true
+    },
+    non_tradeable_multiplier = 0.5,
+    max_pets_to_show = 10,
 }
 local parts = {
-  ["main"] = {0,100,0},
-  ["_camp"] = {-25, 30, -1054},
-  ["_playground"] = {-387, 31, -1750},
-  ["_beach"] = {-670, 37, -1413},
+    ["main"] = {0,100,0},
+    ["_camp"] = {-25, 30, -1054},
+    ["_playground"] = {-387, 31, -1750},
+    ["_beach"] = {-670, 37, -1413},
 }
 local furn = {}
+local Event = {}
+Event.starter_value = ClientData.get("eggs_2026") or 0
 _G.potionfarm = false
 _G.InternalConfig = {}
 CONNECTIONS = {}
@@ -571,6 +748,7 @@ local function __baby_callbak()
   update_gui("baby_needs", farmed.baby_ailments)
 end
 local function enstat(age, friendship, money, ailment, baby_has_ailment)  
+  Event.calculate_currency()
   local deadline = os.clock() + 5
   if money then 
 	while money == ClientData.get("money") and os.clock() < deadline do
@@ -584,7 +762,7 @@ local function enstat(age, friendship, money, ailment, baby_has_ailment)
   if deadline < os.clock() then
 	print("Went beyond the deadline")
 	return
-  end
+end
   if baby_has_ailment and ClientData.get("team") == "Babies" and not has_ailment_baby(ailment) then
   	__baby_callbak()
   end
@@ -628,6 +806,10 @@ local function enstat(age, friendship, money, ailment, baby_has_ailment)
 end
 local function __pet_callback(age, friendship, ailment) 
   if not _G.InternalConfig.FarmPriority then
+    local event_currency = ClientData.get("eggs_2026")
+    if event_currency then
+        update_gui("event_currency", event_currency)
+    end
   	farmed.ailments += 1
   	update_gui("pet_needs", farmed.ailments) 
   else
@@ -635,6 +817,7 @@ local function __pet_callback(age, friendship, ailment)
   end
 end
 local function enstat_baby(money, ailment, pet_has_ailment, petData) 
+  Event.calculate_currency()
   local deadline = os.clock() + 5
   while money == ClientData.get("money") and os.clock() < deadline do
   	task.wait(.1)
@@ -1728,13 +1911,102 @@ local function init_send_webhook()
   	🧪 __Potions Farmed__ - [ %d ]\
   	🧸 __Friendship Levels Farmed__ - [ %d ]\
   	👶 __Baby Needs Completed__ - [ %d ]\
-  	🥚 __Eggs Hatched__ - [ %d ]", 
-	farmed.money, farmed.pets_fullgrown, farmed.ailments, farmed.potions, farmed.friendship_levels, farmed.baby_ailments, farmed.eggs_hatched)
+  	🥚 __Eggs Hatched__ - [ %d ]\
+	🍡 __Candy Eggs__ - [ %d]", 
+	farmed.money, farmed.pets_fullgrown, farmed.ailments, farmed.potions, farmed.friendship_levels, farmed.baby_ailments, farmed.eggs_hatched, ClientData.get("eggs_2026"))
   )
   Cooldown.webhook_send_delay = 3600
 end
+function Event.marshmallow_autocollect() 
+  for _,v in ipairs(marshmallow) do
+    ReplicatedStorage.adoptme_new_net["adoptme_legacy_shared.ContentPacks.Sugarfest2026.ChocolateRiver.ChocolateRiverNet:6"]:FireServer(unpack({
+      [1] = {
+        ["interior_name"] = "MainMap!Sugarfest2026",
+        ["marshmallow_ids"] = {
+          [1] = v
+        }
+      }
+    }))
+    task.wait(.26)
+  end
+  task.wait(.5)
+  ReplicatedStorage.adoptme_new_net["adoptme_legacy_shared.ContentPacks.Sugarfest2026.ChocolateRiver.ChocolateRiverNet:14"]:FireServer()
+  print("[+] Successfully collected marshmallow.")
+  task.wait(.7)
+  Event.calculate_currency()
+  Cooldown.Event.marshmallow_autocollect = 120
+end
+function Event.calculate_currency()
+  update_gui("event_currency", (ClientData.get("eggs_2026") or 0) - Event.starter_value)
+end
+function Event.get_sugar_dices() 
+  local dices = {}
+  local gifts = ClientData.get("inventory").gifts
+  for _,v in gifts do
+	if v.id == "sugarfest_2026_dice" or v.id == "sugarfest_2026_custom_dice" then
+      dices[v.unique] = v
+	end
+  end
+  if count(dices) == 0 then return nil end
+  return dices
+end
+function Event.try_use_dices()
+  local sugar_dices = Event.get_sugar_dices()
+  if not sugar_dices then return end
+  emulate_location("MainMap", LocalPlayer, "Sugarfest2026")
+  for k,v in sugar_dices do
+	if v.id == "sugarfest_2026_dice" then
+	  ReplicatedStorage.adoptme_new_net["adoptme_legacy_shared.ContentPacks.Sugarfest2026.Game.BoardGame.BoardGameNetService:10"]:FireServer({["dice_item_unique"] = k})	
+	else
+	  ReplicatedStorage.adoptme_new_net["adoptme_legacy_shared.ContentPacks.Sugarfest2026.Game.BoardGame.BoardGameNetService:10"]:FireServer({dice_item_unique = k, supplied_distance = 6})
+	end
+	print("🎲 Sugar dice used.")
+	task.wait(1.5)
+  end
+  Event.calculate_currency()
+end
+function Event.collect_dailies_rewards()
+  print("📋 Looking and processing sugarfest dailies..")
+  ReplicatedStorage.adoptme_new_net["adoptme_new.modules.Dailies.DailiesNetService:9"]:FireServer("sugarfest")
+  ReplicatedStorage.adoptme_new_net["adoptme_new.modules.Dailies.DailiesNetService:15"]:FireServer("sugarfest") -- custom dice
+  local sugarfest = ClientData.get("dailies_manager")['serialized_tabs']['sugarfest']
+  if not sugarfest.active_dailies or count(sugarfest.active_dailies) == 0 then
+	print("📋 All sugarfest dailies completed.")
+	local tms = LiveOpsTime.get_time_until(sugarfest.bext_distribution_timestamp) or 3600
+	Cooldown.Event.daily_rewards_cooldown = tms + 5
+	return
+  end
+  Cooldown.Event.daily_rewards_cooldown = 300
+end
+function list_candy_chisel()
+  local chisels = {}
+  local gifts = ClientData.get("inventory").gifts
+  for _, v in gifts do
+	if v.id == "sugarfest_2026_candy_chisel" then
+	  chisels[v.unique] = v
+	end	
+  end
+  if count(chisels) == 0 then return nil end
+  return chisels
+end
+function Event.get_daily_dice()
+  local tms = LiveOpsTime.get_time_until(ClientData.get("board_game_daily_refresh_cycle_timestamp").timestamp)
+  if ClientData.get("board_game_manager").free_dice_claimed then
+    print("🎲 Daily sugar dice is already collected.")
+	Cooldown.Event.daily_dice_cooldown = (tms + 5) or 3600
+	return
+  end
+  ReplicatedStorage.adoptme_new_net["adoptme_legacy_shared.ContentPacks.Sugarfest2026.Game.BoardGame.BoardGameNetService:23"]:FireServer()
+  print("🎲 Daily sugar dice collected.")
+  Cooldown.Event.daily_dice_cooldown = tms + 5
+end
 local function __init_babypet_autofarm() 
-    while task.wait(1) do
+  while task.wait(1) do
+	if Cooldown.Event.try_use_inventory_dices and Cooldown.Event.try_use_inventory_dices <= 0 then
+	  Cooldown.Event.try_use_inventory_dices = nil
+	  pcall(Event.try_use_dices)
+	  Cooldown.Event.try_use_inventory_dices = 300 -- специально убрал if not res потоучто и так и так кулдаун 300 секунд.
+	end
     if _G.InternalConfig.FarmPriority then
       if Cooldown.init_autofarm and Cooldown.init_autofarm <= 0 then
 		Cooldown.init_autofarm = nil
@@ -1763,6 +2035,10 @@ local function __init()
 	cd.init_autofarm = cd.init_autofarm and math.max(0, cd.init_autofarm - 1)
 	cd.init_baby_autofarm = cd.init_baby_autofarm and math.max(0, cd.init_baby_autofarm - 1)
 	cd.init_lurebox_farm = cd.init_lurebox_farm and math.max(0, cd.init_lurebox_farm - 1)
+	cd.Event.marshmallow_autocollect = cd.Event.marshmallow_autocollect and math.max(0, cd.Event.marshmallow_autocollect - 1)
+	cd.Event.daily_dice_cooldown = cd.Event.daily_dice_cooldown and math.max(0, cd.Event.daily_dice_cooldown)
+	cd.Event.daily_rewards_cooldown = cd.Event.daily_rewards_cooldown and math.max(0, cd.Event.daily_rewards_cooldown)
+	cd.Event.try_use_inventory_dices = cd.Event.try_use_inventory_dices and math.max(0, cd.Event.try_use_inventory_dices)
 	if _G.InternalConfig.DiscordWebhookURL and cd.webhook_send_delay == 0 then
 	  cd.webhook_send_delay = nil
 	  task.spawn(function()
@@ -1772,8 +2048,26 @@ local function __init()
 	if _G.InternalConfig.LureboxFarm and cd.init_lurebox_farm == 0 then
 	  cd.init_lurebox_farm = nil
 	  task.spawn(function()
-		  pcall(init_lurebox_farm)
+		pcall(init_lurebox_farm)
 	  end)
+	end
+	if cd.Event.daily_dice_cooldown == 0 then
+	  cd.Event.daily_dice_cooldown = nil
+	  task.spawn(function() 
+	  	pcall(Event.get_daily_dice)
+	  end)
+	end
+	if cd.Event.daily_rewards_cooldown == 0 then
+	  cd.Event.daily_rewards_cooldown = nil
+	  task.spawn(function() 
+	  	pcall(Event.collect_dailies_rewards)
+	  end)
+	end
+    if cd.Event.marshmallow_autocollect == 0 then
+      cd.Event.marshmallow_autocollect = nil
+      task.spawn(function()
+        pcall(Event.marshmallow_autocollect)
+      end)
 	end
 	if cd.watchdog == 0 then
 	  task.spawn(function() 
@@ -1781,7 +2075,7 @@ local function __init()
 		  print("[Watchdog] Lua Memory Usage:", gcinfo()/1024, "Mb")
 		  print("[Watchdog] Client Memory Usage:", Stats:GetTotalMemoryUsageMb(), "Mb")
 		  cd.watchdog = 60
-		end)
+	    end)
 	  end)
 	end
   end
@@ -2011,7 +2305,7 @@ task.spawn(function()
   gui.ResetOnSpawn = false 
   gui.Parent = hui
   frame.Name = "StatsFrame"
-  frame.Size = UDim2.new(0, 250, 0, 150)
+  frame.Size = UDim2.new(0, 250, 0, 175)
   frame.Position = UDim2.new(0, 5, 0, 5)
   frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
   frame.BackgroundTransparency = 0.3
@@ -2038,6 +2332,7 @@ task.spawn(function()
   createLabel("friendship", "🧸 Friendship levels farmed", 4)
   createLabel("baby_needs", "👶 Baby needs completed", 5)
   createLabel("eggs", "🥚 Eggs hatched", 6)
+  createLabel("event_currency", "🍡 Candy eggs", 7)
 end) 
 if not _G.InternalConfig.FarmPriority and 
 not _G.InternalConfig.BabyAutoFarm and
